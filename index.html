@@ -6,84 +6,73 @@
     <title>Ansari Discount Mart - Bernala</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Header -->
-    <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <!-- Header Navigation -->
+    <header class="bg-emerald-800 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-                <div class="bg-emerald-700 text-white font-extrabold px-3 py-1.5 rounded-lg text-lg tracking-wider">ADM</div>
+                <div class="bg-amber-400 text-slate-950 font-black px-2.5 py-1 rounded-lg text-lg tracking-wider">ADM</div>
                 <div>
-                    <h1 class="font-extrabold text-gray-900 leading-tight text-base md:text-lg">ANSARI</h1>
-                    <p class="text-[10px] text-amber-600 font-bold tracking-widest uppercase">DISCOUNT MART</p>
+                    <h1 class="font-extrabold text-sm tracking-wide leading-tight">ANSARI</h1>
+                    <p class="text-[10px] text-amber-300 font-bold leading-tight">DISCOUNT MART</p>
                 </div>
             </div>
-
-            <div class="hidden md:flex flex-1 max-w-md mx-4">
-                <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search products in Bernala..." class="w-full border border-gray-300 rounded-l-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
-                <button class="bg-emerald-600 text-white px-4 rounded-r-lg text-xs font-bold">Search</button>
-            </div>
-
-            <div class="flex items-center gap-3">
-                <button onclick="showPage('track')" class="text-xs font-bold text-gray-700 hover:text-emerald-700 flex items-center gap-1">
-                    <i data-lucide="truck" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline">Track Order</span>
+            <div class="flex items-center gap-3 text-xs">
+                <button onclick="showAdminModal()" class="hover:text-amber-300 font-semibold flex items-center gap-1 bg-emerald-900/60 px-2.5 py-1.5 rounded-lg border border-emerald-700">
+                    <i data-lucide="truck" class="w-3.5 h-3.5"></i> Admin
                 </button>
-                <button onclick="showAdminModal()" class="text-xs font-bold text-gray-500 hover:text-emerald-700">Admin</button>
-                <button onclick="showPage('cart')" class="relative bg-emerald-50 text-emerald-700 p-2 rounded-lg hover:bg-emerald-100">
-                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                    <span id="cartCount" class="absolute -top-1.5 -right-1.5 bg-amber-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                <button onclick="showPage('cart')" class="relative bg-emerald-900 px-3 py-1.5 rounded-lg border border-emerald-700 flex items-center gap-1 font-bold">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                    <span id="cartCount" class="bg-amber-400 text-slate-950 rounded-full px-1.5 py-0.2 text-[10px] font-black">0</span>
                 </button>
             </div>
         </div>
-        <div class="px-4 pb-2 md:hidden">
-            <input type="text" id="mobileSearchInput" onkeyup="filterProductsMobile()" placeholder="Search products in Bernala..." class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-none">
+        <!-- Search Bar -->
+        <div class="max-w-4xl mx-auto px-4 pb-2.5">
+            <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search products in Bernala..." class="w-full bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs border-0 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-inner">
         </div>
     </header>
 
     <!-- Main Content Area -->
-    <main id="app-content" class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
-        <!-- Dynamic Content Injected Here -->
-    </main>
+    <main id="app-content" class="max-w-4xl mx-auto px-4 py-4 flex-grow w-full"></main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-white mt-12 border-t border-slate-800">
-        <div class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+    <!-- Footer Section -->
+    <footer class="bg-slate-900 text-gray-300 pt-6 pb-4 mt-8 border-t border-slate-800 text-xs">
+        <div class="max-w-4xl mx-auto px-4 space-y-4">
             <div>
-                <h3 class="font-bold text-sm text-emerald-400 mb-2">ANSARI DISCOUNT MART</h3>
-                <p class="text-gray-400 leading-relaxed">Your trusted local supermarket for daily groceries, household goods, plasticware, and everyday essentials at wholesale discounted rates.</p>
+                <h4 class="font-black text-amber-400 text-sm tracking-wide">ANSARI DISCOUNT MART</h4>
+                <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">Your trusted local supermarket for daily groceries, household goods, plasticware, and everyday essentials at wholesale discounted rates.</p>
             </div>
             <div>
-                <h3 class="font-bold text-sm text-emerald-400 mb-2">Store Location</h3>
-                <p class="text-gray-400">Main Bazaar, Bernala<br>Azad Kashmir, Pakistan</p>
-                <p class="text-gray-400 mt-2">WhatsApp: +92 355 8279470</p>
+                <p class="font-bold text-white mb-0.5">Store Location</p>
+                <p class="text-[11px] text-gray-400">Main Bazaar, Bernala, Azad Kashmir</p>
             </div>
-            <div>
-                <h3 class="font-bold text-sm text-emerald-400 mb-2">Quick Payment</h3>
-                <p class="text-gray-400">JazzCash / EasyPaisa / Cash on Delivery</p>
-                <p class="text-gray-500 mt-2">Local delivery available across Bernala city and nearby sub-areas.</p>
+            <div class="border-t border-slate-800 pt-3 flex flex-col sm:flex-row justify-between items-center gap-2 text-[11px] text-gray-500">
+                <p>&copy; 2026 Ansari Discount Mart. All rights reserved.</p>
+                <p>Designed for Fast Local Delivery</p>
             </div>
-        </div>
-        <div class="bg-slate-950 py-3 text-center text-[11px] text-gray-500">
-            &copy; 2026 Ansari Discount Mart Bernala. All rights reserved.
         </div>
     </footer>
 
     <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/923558279470" target="_blank" class="fixed bottom-4 right-4 bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 z-50 flex items-center justify-center">
+    <a href="https://wa.me/923000000000" target="_blank" class="fixed bottom-4 right-4 bg-emerald-500 hover:bg-emerald-600 text-white p-3 rounded-full shadow-lg z-50 flex items-center justify-center transition">
         <i data-lucide="message-circle" class="w-6 h-6"></i>
     </a>
 
-    <!-- Application Script Start -->
     <script>
         const products = [
-            { id: 1, name: "Tapal Danedar Tea 950g Pack", category: "Grocery", price: 1450, originalPrice: 1580, image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=400&q=80" },
-            { id: 2, name: "Dalda Cooking Oil 5 Litre Tin", category: "Grocery", price: 2650, originalPrice: 2800, image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80" },
-            { id: 3, name: "Surf Excel Washing Powder 1kg", category: "Household", price: 620, originalPrice: 680, image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80" },
-            { id: 4, name: "Plastic Storage Bucket Heavy Duty (20L)", category: "Plasticware", price: 480, originalPrice: 550, image: "https://images.unsplash.com/photo-1585336261026-870a6d21633b?auto=format&fit=crop&w=400&q=80" },
-            { id: 5, name: "Nestle Everyday Milk Powder 900g", category: "Grocery", price: 1680, originalPrice: 1800, image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80" },
-            { id: 6, name: "Lux Beauty Soap Pack of 4", category: "Personal Care", price: 420, originalPrice: 460, image: "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?auto=format&fit=crop&w=400&q=80" }
+            { id: 1, name: "Basmati Rice Super Kernel 5kg", category: "Grocery", price: 1850, image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300" },
+            { id: 2, name: "Cooking Oil 5 Litre Premium", category: "Grocery", price: 2650, image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300" },
+            { id: 3, name: "Plastic Storage Container Set (3 Pcs)", category: "Household", price: 850, image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=300" },
+            { id: 4, name: "Tea Powder Strong Blend 950g", category: "Grocery", price: 1450, image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=300" },
+            { id: 5, name: "Laundry Detergent Powder 2kg", category: "Household", price: 780, image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=300" },
+            { id: 6, name: "Stainless Steel Kitchen Rack", category: "Plastic & Home", price: 1250, image: "https://images.unsplash.com/photo-1590725140246-20acdee442be?w=300" }
         ];
 
         let cart = JSON.parse(localStorage.getItem('adm_cart')) || [];
@@ -92,25 +81,25 @@
         function initApp() {
             updateCartCount();
             showPage('home');
-            lucide.createIcons();
         }
 
         function updateCartCount() {
-            const count = cart.reduce((total, item) => total + item.qty, 0);
+            const count = cart.reduce((acc, item) => acc + item.qty, 0);
             document.getElementById('cartCount').innerText = count;
             localStorage.setItem('adm_cart', JSON.stringify(cart));
         }
-                function showPage(pageName) {
+
+        function showPage(page) {
             const main = document.getElementById('app-content');
-            if (pageName === 'home') {
+            if (page === 'home') {
                 main.innerHTML = getHomePageHTML();
-            } else if (pageName === 'cart') {
+            } else if (page === 'cart') {
                 main.innerHTML = getCartPageHTML();
-            } else if (pageName === 'checkout') {
+            } else if (page === 'checkout') {
                 main.innerHTML = getCheckoutPageHTML();
-            } else if (pageName === 'track') {
+            } else if (page === 'track') {
                 main.innerHTML = getTrackPageHTML();
-            } else if (pageName === 'admin') {
+            } else if (page === 'admin') {
                 main.innerHTML = getAdminPanelHTML();
             }
             lucide.createIcons();
@@ -119,51 +108,51 @@
 
         function getHomePageHTML() {
             return `
-                <div class="bg-gradient-to-r from-emerald-800 to-teal-900 text-white rounded-2xl p-6 md:p-10 mb-8 shadow-md">
-                    <span class="bg-amber-500 text-slate-900 font-extrabold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">Bernala Special Deals</span>
-                    <h2 class="text-2xl md:text-4xl font-extrabold mt-3 leading-tight">Wholesale Rates Directly to Your Doorstep</h2>
-                    <p class="text-emerald-100 text-xs md:text-sm mt-2 max-w-xl">Save big on daily groceries, household items, plasticware & kitchen essentials in Bernala, Azad Kashmir.</p>
-                    <button onclick="scrollToProducts()" class="mt-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-xs shadow">Shop Discount Products</button>
-                </div>
+                <div class="space-y-4">
+                    <!-- Banner -->
+                    <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-xl p-4 text-white shadow-sm flex justify-between items-center">
+                        <div>
+                            <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded uppercase">Bernala Special</span>
+                            <h2 class="text-base font-extrabold mt-1">Wholesale Rates Delivered Home</h2>
+                            <p class="text-xs text-emerald-100 mt-0.5">Fast Courier & Local COD Available!</p>
+                        </div>
+                    </div>
 
-                <div id="productsSection">
-                    <h3 class="font-extrabold text-lg text-gray-800 mb-4 flex items-center gap-2">
-                        <span>Featured Discount Products</span>
-                    </h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="productGrid">
-                        ${products.map(p => `
-                            <div class="bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                                <div class="relative">
-                                    <img src="${p.image}" alt="${p.name}" class="w-full h-36 md:h-44 object-cover">
-                                    <span class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                                        SAVE Rs. ${p.originalPrice - p.price}
-                                    </span>
-                                </div>
-                                <div class="p-3 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <span class="text-[10px] text-gray-400 uppercase font-bold">${p.category}</span>
-                                        <h4 class="font-bold text-sm text-gray-800 leading-snug line-clamp-2">${p.name}</h4>
-                                    </div>
-                                    <div class="mt-3">
-                                        <div class="flex items-baseline gap-2">
-                                            <span class="text-base font-extrabold text-emerald-700">Rs. ${p.price}</span>
-                                            <span class="text-xs text-gray-400 line-through">Rs. ${p.originalPrice}</span>
-                                        </div>
-                                        <button onclick="addToCart(${p.id})" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1">
-                                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add to Cart
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
+                    <!-- Products Grid -->
+                    <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        ${renderProducts(products)}
                     </div>
                 </div>
             `;
         }
 
+        function renderProducts(list) {
+            if (list.length === 0) {
+                return `<p class="col-span-full text-center text-xs text-gray-500 py-6">No products found.</p>`;
+            }
+            return list.map(p => `
+                <div class="bg-white rounded-xl border p-2.5 shadow-sm flex flex-col justify-between hover:border-emerald-500 transition">
+                    <div>
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-28 object-cover rounded-lg mb-2">
+                        <span class="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-semibold">${p.category}</span>
+                        <h3 class="font-bold text-xs text-gray-800 mt-1 line-clamp-2">${p.name}</h3>
+                    </div>
+                    <div class="mt-2 pt-2 border-t flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-400">Price</span>
+                            <p class="font-black text-xs text-emerald-700">Rs. ${p.price}</p>
+                        </div>
+                        <button onclick="addToCart(${p.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-1.5 rounded-lg text-xs flex items-center gap-1 shadow-sm">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         function addToCart(id) {
             const prod = products.find(p => p.id === id);
-            const exist = cart.find(i => i.id === id);
+            const exist = cart.find(item => item.id === id);
             if (exist) {
                 exist.qty += 1;
             } else {
@@ -173,70 +162,72 @@
             alert(`${prod.name} added to cart!`);
         }
 
+        function filterProducts() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = products.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+            const grid = document.getElementById('productGrid');
+            if (grid) {
+                grid.innerHTML = renderProducts(filtered);
+                lucide.createIcons();
+            }
+        }
+
         function getCartPageHTML() {
             if (cart.length === 0) {
                 return `
-                    <div class="text-center py-16 bg-white rounded-xl border">
-                        <i data-lucide="shopping-bag" class="w-12 h-12 text-gray-300 mx-auto mb-3"></i>
-                        <h3 class="text-lg font-bold text-gray-700">Your Cart is Empty</h3>
-                        <p class="text-xs text-gray-400 mt-1 mb-4">Browse our mart products and add items to order.</p>
+                    <div class="bg-white p-8 rounded-xl border text-center shadow-sm">
+                        <i data-lucide="shopping-bag" class="w-12 h-12 text-gray-300 mx-auto mb-2"></i>
+                        <h3 class="font-bold text-gray-700 text-sm">Your Cart is Empty</h3>
+                        <p class="text-xs text-gray-400 mt-1 mb-4">Add products to cart to place your order.</p>
                         <button onclick="showPage('home')" class="bg-emerald-600 text-white font-bold px-4 py-2 rounded-lg text-xs">Start Shopping</button>
                     </div>
                 `;
             }
 
-            const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
             return `
-                <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl border shadow-sm">
-                    <h3 class="font-extrabold text-lg text-gray-800 mb-4 border-b pb-2">Your Shopping Cart</h3>
-                    <div class="space-y-4">
+                <div class="bg-white p-4 rounded-xl border shadow-sm space-y-4">
+                    <h3 class="font-extrabold text-base text-gray-800 border-b pb-2">Shopping Cart</h3>
+                    <div class="space-y-3">
                         ${cart.map(item => `
-                            <div class="flex items-center justify-between border-b pb-3 gap-3">
-                                <div>
-                                    <h4 class="font-bold text-sm text-gray-800">${item.name}</h4>
-                                    <p class="text-xs text-emerald-700 font-bold">Rs. ${item.price} x ${item.qty} = Rs.${item.price * item.qty}</p>
+                            <div class="flex items-center justify-between border-b pb-2 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <img src="${item.image}" class="w-10 h-10 object-cover rounded">
+                                    <div>
+                                        <p class="font-bold text-gray-800">${item.name}</p>
+                                        <p class="text-gray-500">Rs. ${item.price} x${item.qty}</p>
+                                    </div>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-gray-100 rounded text-xs font-bold">-</button>
-                                    <span class="text-xs font-bold">${item.qty}</span>
-                                    <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-gray-100 rounded text-xs font-bold">+</button>
-                                    <button onclick="removeItem(${item.id})" class="text-red-500 text-xs font-bold ml-2">Remove</button>
+                                    <span class="font-bold text-emerald-700">Rs. ${item.price * item.qty}</span>
+                                    <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                                 </div>
                             </div>
                         `).join('')}
                     </div>
 
-                    <div class="mt-6 border-t pt-4 flex justify-between items-center">
-                        <span class="font-bold text-gray-700">Total Amount:</span>
-                        <span class="text-xl font-extrabold text-emerald-700">Rs. ${total}</span>
+                    <div class="border-t pt-2 flex justify-between font-bold text-xs">
+                        <span>Cart Subtotal:</span>
+                        <span class="text-emerald-700">Rs. ${subtotal}</span>
                     </div>
 
-                    <button onclick="showPage('checkout')" class="w-full mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm">Proceed to Checkout</button>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="showPage('home')" class="flex-1 border border-gray-300 font-bold py-2 rounded-lg text-xs text-gray-700">Continue Shopping</button>
+                        <button onclick="showPage('checkout')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs">Proceed to Checkout</button>
+                    </div>
                 </div>
             `;
         }
 
-        function changeQty(id, delta) {
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.qty += delta;
-                if (item.qty <= 0) {
-                    cart = cart.filter(i => i.id !== id);
-                }
-            }
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
             updateCartCount();
             showPage('cart');
         }
 
-        function removeItem(id) {
-            cart = cart.filter(i => i.id !== id);
-            updateCartCount();
-            showPage('cart');
-                }
-                        function getCheckoutPageHTML() {
+        function getCheckoutPageHTML() {
             const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-            const deliveryCharges = 300; // Flat RS. 300 per 500g shipment
+            const deliveryCharges = 300;
             const grandTotal = subtotal + deliveryCharges;
 
             return `
@@ -345,7 +336,7 @@
                 phone,
                 address,
                 courier,
-                payment: payment === 'JazzCash / EasyPaisa' ? `JazzCash/EasyPaisa (TRX: ${trxId})` : payment,
+                payme                payment: payment === 'JazzCash / EasyPaisa' ? `JazzCash/EasyPaisa (TRX: ${trxId})` : payment,
                 trxId: trxId,
                 items: [...cart],
                 subtotal,

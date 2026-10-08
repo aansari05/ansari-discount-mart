@@ -234,8 +234,11 @@
             updateCartCount();
             showPage('cart');
                 }
-                function getCheckoutPageHTML() {
-            const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+                        function getCheckoutPageHTML() {
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const deliveryCharges = 300; // Flat RS. 300 per 500g shipment
+            const grandTotal = subtotal + deliveryCharges;
+
             return `
                 <div class="max-w-xl mx-auto bg-white p-6 rounded-xl border shadow-sm">
                     <h3 class="font-extrabold text-lg text-gray-800 mb-4 border-b pb-2">Checkout Details</h3>
@@ -249,24 +252,77 @@
                             <input type="tel" id="custPhone" required placeholder="03XXXXXXXXX" class="w-full border rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 mb-1">Delivery Address in Bernala *</label>
-                            <textarea id="custAddress" required placeholder="Street / Sector / Nearby landmark in Bernala" class="w-full border rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none" rows="3"></textarea>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Delivery Address *</label>
+                            <textarea id="custAddress" required placeholder="Street / Sector / Nearby landmark" class="w-full border rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none" rows="2"></textarea>
                         </div>
+
+                        <!-- Courier Selection -->
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 mb-1">Payment Method</label>
-                            <select id="custPayment" class="w-full border rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none">
-                                <option value="Cash on Delivery">Cash on Delivery (COD)</option>
-                                <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa</option>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Select Courier Partner (Shipping Rate: Rs. 300 up to 500g) *</label>
+                            <select id="custCourier" required class="w-full border rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none">
+                                <option value="TCS Express (Rs. 300)">TCS Express - Rs. 300</option>
+                                <option value="Leopard Courier (Rs. 300)">Leopard Courier - Rs. 300</option>
+                                <option value="PostEx Courier (Rs. 300)">PostEx Courier - Rs. 300</option>
                             </select>
                         </div>
-                        <div class="border-t pt-3 flex justify-between font-bold text-sm">
-                            <span>Total Payable Amount:</span>
-                            <span class="text-emerald-700">Rs. ${total}</span>
+
+                        <!-- Payment Method -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Payment Method *</label>
+                            <select id="custPayment" onchange="togglePaymentDetails()" class="w-full border rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none">
+                                <option value="Cash on Delivery">Cash on Delivery (COD)</option>
+                                <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa (Online Payment)</option>
+                            </select>
                         </div>
-                        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold py-3 rounded-lg text-sm transition">Place Order Now</button>
+
+                        <!-- Online Payment Section -->
+                        <div id="onlinePaymentBox" class="hidden bg-emerald-50 border border-emerald-200 p-3.5 rounded-lg space-y-2 text-xs">
+                            <p class="font-bold text-emerald-900 border-b border-emerald-200 pb-1">Payment Account Details:</p>
+                            <p class="text-xs text-gray-800"><b>Account Title:</b> <span class="text-emerald-800 font-bold">Muhammad Hassan Jalil</span></p>
+                            <div class="space-y-1 text-gray-700">
+                                <p><b>JazzCash IBAN:</b> <span class="font-mono text-emerald-800 font-bold select-all">PK04JCMA0808923285690902</span></p>
+                                <p><b>EasyPaisa IBAN:</b> <span class="font-mono text-emerald-800 font-bold select-all">PK02TMFB0000000017238850</span></p>
+                            </div>
+                            <div class="pt-2 border-t border-emerald-200">
+                                <label class="block text-xs font-bold text-gray-800 mb-1">Transaction ID / TRX ID (Payment Confirmation) *</label>
+                                <input type="text" id="custTrxId" placeholder="Enter 11-digit TRX ID after sending payment" class="w-full border border-emerald-300 rounded-lg p-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none bg-white">
+                                <p class="text-[10px] text-emerald-700 mt-1">* Payment verify hone k baad order dispatch kiya jayega.</p>
+                            </div>
+                        </div>
+
+                        <!-- Price Summary -->
+                        <div class="border-t pt-3 space-y-1 text-xs">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Items Subtotal:</span>
+                                <span>Rs. ${subtotal}</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Delivery Charges (500g Shipment):</span>
+                                <span>Rs. ${deliveryCharges}</span>
+                            </div>
+                            <div class="flex justify-between font-extrabold text-sm text-gray-800 border-t pt-1">
+                                <span>Total Amount Payable:</span>
+                                <span class="text-emerald-700">Rs. ${grandTotal}</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold py-3 rounded-lg text-sm transition">Confirm & Place Order</button>
                     </form>
                 </div>
             `;
+        }
+
+        function togglePaymentDetails() {
+            const method = document.getElementById('custPayment').value;
+            const box = document.getElementById('onlinePaymentBox');
+            const trxInput = document.getElementById('custTrxId');
+            if (method === 'JazzCash / EasyPaisa') {
+                box.classList.remove('hidden');
+                trxInput.required = true;
+            } else {
+                box.classList.add('hidden');
+                trxInput.required = false;
+            }
         }
 
         function handleOrderSubmit(e) {
@@ -274,8 +330,13 @@
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
             const address = document.getElementById('custAddress').value;
+            const courier = document.getElementById('custCourier').value;
             const payment = document.getElementById('custPayment').value;
-            const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const trxId = document.getElementById('custTrxId') ? document.getElementById('custTrxId').value : '';
+
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const deliveryCharges = 300;
+            const grandTotal = subtotal + deliveryCharges;
 
             const orderId = 'ADM-' + Math.floor(100000 + Math.random() * 900000);
             const newOrder = {
@@ -283,10 +344,14 @@
                 name,
                 phone,
                 address,
-                payment,
+                courier,
+                payment: payment === 'JazzCash / EasyPaisa' ? `JazzCash/EasyPaisa (TRX: ${trxId})` : payment,
+                trxId: trxId,
                 items: [...cart],
-                total,
-                status: 'Pending',
+                subtotal,
+                deliveryCharges,
+                total: grandTotal,
+                status: payment === 'JazzCash / EasyPaisa' ? 'Payment Verification Pending' : 'Order Confirmed (COD)',
                 date: new Date().toLocaleDateString()
             };
 
@@ -303,16 +368,18 @@
                         <i data-lucide="check-circle" class="w-8 h-8"></i>
                     </div>
                     <h3 class="font-extrabold text-lg text-gray-800">Order Placed Successfully!</h3>
-                    <p class="text-xs text-gray-500 mt-1">Thank you, <b>${name}</b>. Your order has been received.</p>
+                    <p class="text-xs text-gray-500 mt-1">Thank you, <b>${name}</b>. Your order has been placed.</p>
                     
-                    <div class="bg-gray-50 border rounded-lg p-3 my-4 text-left text-xs space-y-1">
+                    <div class="bg-gray-50 border rounded-lg p-3 my-4 text-left text-xs space-y-1.5">
                         <p><b>Order ID:</b> <span class="text-emerald-700 font-bold">${orderId}</span></p>
-                        <p><b>Total Amount:</b> Rs. ${total}</p>
-                        <p><b>Payment:</b> ${payment}</p>
+                        <p><b>Courier Partner:</b> ${courier}</p>
+                        <p><b>Payment Method:</b> ${payment}</p>
+                        ${trxId ? `<p><b>TRX ID (Payment Confirmed):</b> <span class="font-bold text-emerald-800">${trxId}</span></p>` : ''}
+                        <p><b>Total Amount Payable:</b> Rs. ${grandTotal} (Inc. Rs. 300 Shipping)</p>
                         <p><b>Delivery Address:</b> ${address}</p>
                     </div>
 
-                    <p class="text-[11px] text-gray-400 mb-4">Keep your Order ID safe to track delivery status.</p>
+                    <p class="text-[11px] text-gray-400 mb-4">Save your Order ID to track delivery status.</p>
                     
                     <div class="flex gap-2">
                         <button onclick="showPage('home')" class="flex-1 bg-emerald-600 text-white font-bold py-2 rounded-lg text-xs">Continue Shopping</button>
@@ -344,10 +411,12 @@
 
             if (found) {
                 resDiv.innerHTML = `
-                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs space-y-1">
                         <p class="font-bold text-emerald-800 mb-1">Status: ${found.status}</p>
                         <p><b>Name:</b> ${found.name}</p>
+                        <p><b>Courier:</b> ${found.courier}</p>
                         <p><b>Total:</b> Rs. ${found.total}</p>
+                        ${found.trxId ? `<p><b>TRX ID:</b> ${found.trxId}</p>` : ''}
                         <p><b>Date:</b> ${found.date}</p>
                     </div>
                 `;
@@ -377,8 +446,9 @@
                                         <th class="p-2">Order ID</th>
                                         <th class="p-2">Customer</th>
                                         <th class="p-2">Phone</th>
-                                        <th class="p-2">Address</th>
+                                        <th class="p-2">Courier</th>
                                         <th class="p-2">Total</th>
+                                        <th class="p-2">Payment Details</th>
                                         <th class="p-2">Status</th>
                                     </tr>
                                 </thead>
@@ -388,8 +458,9 @@
                                             <td class="p-2 font-bold">${o.id}</td>
                                             <td class="p-2">${o.name}</td>
                                             <td class="p-2">${o.phone}</td>
-                                            <td class="p-2">${o.address}</td>
+                                            <td class="p-2">${o.courier}</td>
                                             <td class="p-2 font-bold text-emerald-700">Rs. ${o.total}</td>
+                                            <td class="p-2 font-mono">${o.payment}</td>
                                             <td class="p-2"><span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded font-bold">${o.status}</span></td>
                                         </tr>
                                     `).join('')}

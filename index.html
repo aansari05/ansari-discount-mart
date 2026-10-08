@@ -1,0 +1,555 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ansari Discount Mart - Bernala, Azad Kashmir</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .badge-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans pb-16 md:pb-0">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-emerald-800 text-white text-xs md:text-sm py-2 px-4 text-center flex justify-between items-center">
+        <span>📍 Bernala, Azad Kashmir | Express Local Delivery</span>
+        <span class="hidden md:inline">📞 Order on WhatsApp: 03558279470</span>
+        <span class="font-semibold bg-emerald-700 px-2 py-0.5 rounded">Mega Sale Live!</span>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <a href="#" onclick="showPage('home')" class="flex items-center gap-2">
+                <div class="bg-emerald-600 text-white p-2 rounded-lg font-black text-xl">ADM</div>
+                <div>
+                    <h1 class="font-extrabold text-lg md:text-xl text-emerald-800 leading-none">ANSARI</h1>
+                    <p class="text-xs font-semibold text-amber-600 tracking-wider">DISCOUNT MART</p>
+                </div>
+            </a>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-md hidden md:block">
+                <div class="relative">
+                    <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search 2000+ grocery & essential items..." class="w-full pl-10 pr-4 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-4">
+                <button onclick="showPage('track')" class="text-xs md:text-sm font-medium text-gray-600 hover:text-emerald-600 flex items-center gap-1">
+                    <i data-lucide="truck" class="w-4 h-4"></i> Track Order
+                </button>
+                <button onclick="toggleCart()" class="relative bg-emerald-50 text-emerald-700 p-2 rounded-full hover:bg-emerald-100">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-amber-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Bar -->
+        <div class="p-2 border-t md:hidden bg-gray-50">
+            <div class="relative">
+                <input type="text" id="mobileSearchInput" onkeyup="filterProductsMobile()" placeholder="Search products in Bernala..." class="w-full pl-9 pr-4 py-1.5 border rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-2"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Container -->
+    <main id="app-content" class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Page contents injected via JS -->
+    </main>
+
+    <!-- Cart Drawer Modal -->
+    <div id="cartDrawer" class="fixed inset-0 bg-black/50 z-50 hidden flex justify-end">
+        <div class="bg-white w-full max-w-md h-full flex flex-col justify-between shadow-2xl">
+            <div class="p-4 border-b flex justify-between items-center bg-emerald-800 text-white">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="shopping-bag"></i> Your Discount Cart</h3>
+                <button onclick="toggleCart()" class="text-white hover:text-gray-200"><i data-lucide="x"></i></button>
+            </div>
+            
+            <div id="cartItemsList" class="p-4 flex-1 overflow-y-auto space-y-4">
+                <!-- Cart items populate here -->
+            </div>
+
+            <div class="p-4 border-t bg-gray-50 space-y-3">
+                <div class="flex justify-between text-sm">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal" class="font-semibold">Rs. 0</span>
+                </div>
+                <div class="flex justify-between text-sm text-emerald-600 font-medium">
+                    <span>Total Savings:</span>
+                    <span id="cartSavings">Rs. 0</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span>Delivery Charge (Bernala):</span>
+                    <span class="font-semibold text-emerald-600">FREE / Low Rate</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold border-t pt-2">
+                    <span>Total Amount:</span>
+                    <span id="cartTotal" class="text-emerald-700">Rs. 0</span>
+                </div>
+                <button onclick="goToCheckout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold text-center block">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/923558279470?text=AoA%20Ansari%20Discount%20Mart,%20I%20want%20to%20inquire%20about%20products." target="_blank" class="fixed bottom-4 right-4 bg-green-500 text-white p-3.5 rounded-full shadow-lg hover:bg-green-600 z-40 flex items-center justify-center">
+        <i data-lucide="message-circle" class="w-7 h-7"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-10 mt-12 border-t-4 border-emerald-600">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h2 class="text-xl font-bold text-white mb-2">ANSARI DISCOUNT MART</h2>
+                <p class="text-xs text-gray-400">Your trusted local supermarket for daily groceries, household goods, plasticware, and everyday essentials at wholesale discounted rates.</p>
+                <p class="text-xs text-emerald-400 mt-2">📍 Bernala, Azad Kashmir, Pakistan</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-white mb-2">Contact Store</h3>
+                <p class="text-xs mb-1">Phone / WhatsApp: <span class="text-white">03558279470</span></p>
+                <p class="text-xs mb-1">Email: <span class="text-white">ansariproducts05@gmail.com</span></p>
+                <p class="text-xs">Timing: 8:00 AM - 10:00 PM Daily</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-white mb-2">Payment Accounts</h3>
+                <p class="text-xs text-gray-400">JazzCash IBAN:</p>
+                <p class="text-xs font-mono text-amber-400 mb-2">PK04JCMA0808923285690902</p>
+                <p class="text-xs text-gray-400">EasyPaisa IBAN:</p>
+                <p class="text-xs font-mono text-amber-400">PK02TMFB0000000017238850</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-white mb-2">Quick Navigation</h3>
+                <ul class="text-xs space-y-1">
+                    <li><a href="#" onclick="showPage('home')" class="hover:underline">Home Store</a></li>
+                    <li><a href="#" onclick="showPage('track')" class="hover:underline">Track Order Status</a></li>
+                    <li><a href="#admin" onclick="showAdminModal()" class="hover:underline text-gray-500">Admin Control Panel</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-xs text-gray-500 mt-8 pt-4 border-t border-gray-800">
+            © 2026 Ansari Discount Mart Bernala. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- App Logic JavaScript -->
+    <script>
+        // Sample Product Database
+        let products = [
+            { id: 1, name: "Premium Super Basmati Rice 5KG", category: "Grocery", price: 1650, originalPrice: 1950, image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400", stock: 25 },
+            { id: 2, name: "Cooking Oil 5 Litre Tin", category: "Grocery", price: 2450, originalPrice: 2700, image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400", stock: 18 },
+            { id: 3, name: "Tea Bags Pack 100s", category: "Beverages", price: 680, originalPrice: 820, image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=400", stock: 40 },
+            { id: 4, name: "Dishwashing Liquid Lemon 750ml", category: "Household", price: 340, originalPrice: 420, image: "https://images.unsplash.com/photo-1585830810406-382a5303f278?w=400", stock: 30 },
+            { id: 5, name: "Luxury Bath Soap 6 Pack", category: "Personal Care", price: 520, originalPrice: 650, image: "https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=400", stock: 50 },
+            { id: 6, name: "Plastic Storage Container Set", category: "Household", price: 1250, originalPrice: 1600, image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400", stock: 12 }
+        ];
+
+        let cart = [];
+        let orders = JSON.parse(localStorage.getItem('adm_orders') || '[]');
+
+        function initApp() {
+            lucide.createIcons();
+            showPage('home');
+            updateCartCount();
+        }
+
+        function showPage(page, data = null) {
+            const main = document.getElementById('app-content');
+            if (page === 'home') {
+                main.innerHTML = getHomePageHTML();
+            } else if (page === 'checkout') {
+                main.innerHTML = getCheckoutPageHTML();
+            } else if (page === 'track') {
+                main.innerHTML = getTrackPageHTML();
+            } else if (page === 'admin') {
+                main.innerHTML = getAdminPanelHTML();
+            }
+            lucide.createIcons();
+            window.scrollTo(0, 0);
+        }
+
+        function getHomePageHTML() {
+            return `
+                <!-- Banner Slider -->
+                <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 rounded-2xl p-6 md:p-10 text-white mb-8 shadow-md">
+                    <div class="max-w-xl">
+                        <span class="bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full uppercase">Weekly Discount Bazaar</span>
+                        <h2 class="text-2xl md:text-4xl font-extrabold mt-3 leading-tight">Save Big On Grocery & Daily Household Essentials</h2>
+                        <p class="text-sm text-emerald-100 mt-2">Get direct store rates delivered right to your home in Bernala.</p>
+                        <button onclick="scrollToProducts()" class="mt-4 bg-amber-400 text-gray-900 hover:bg-amber-300 font-bold px-6 py-2.5 rounded-lg text-sm transition">Shop Discounted Deals</button>
+                    </div>
+                </div>
+
+                <!-- Product Grid Section -->
+                <div id="productsSection">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Featured Discount Products</h3>
+                        <span class="text-xs text-emerald-700 font-semibold">100% Quality Guaranteed</span>
+                    </div>
+
+                    <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        ${products.map(p => `
+                            <div class="bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                                <div class="relative">
+                                    <img src="${p.image}" alt="${p.name}" class="w-full h-36 md:h-44 object-cover">
+                                    <span class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                        SAVE Rs. ${p.originalPrice - p.price}
+                                    </span>
+                                </div>
+                                <div class="p-3 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <span class="text-[10px] text-gray-400 uppercase font-bold">${p.category}</span>
+                                        <h4 class="font-bold text-sm text-gray-800 leading-snug line-clamp-2">${p.name}</h4>
+                                    </div>
+                                    <div class="mt-3">
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-base font-extrabold text-emerald-700">Rs. ${p.price}</span>
+                                            <span class="text-xs text-gray-400 line-through">Rs. ${p.originalPrice}</span>
+                                        </div>
+                                        <button onclick="addToCart(${p.id})" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1">
+                                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartCount();
+            renderCartItems();
+            toggleCart(true);
+        }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('cartCount').innerText = totalItems;
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsList');
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 text-sm py-8">Your shopping cart is empty.</p>`;
+                document.getElementById('cartSubtotal').innerText = 'Rs. 0';
+                document.getElementById('cartSavings').innerText = 'Rs. 0';
+                document.getElementById('cartTotal').innerText = 'Rs. 0';
+                return;
+            }
+
+            let subtotal = 0;
+            let savings = 0;
+
+            container.innerHTML = cart.map(item => {
+                subtotal += item.price * item.qty;
+                savings += (item.originalPrice - item.price) * item.qty;
+                return `
+                    <div class="flex items-center gap-3 border-b pb-3">
+                        <img src="${item.image}" class="w-12 h-12 rounded object-cover">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-xs text-gray-800">${item.name}</h5>
+                            <p class="text-xs text-emerald-700 font-bold">Rs. ${item.price} x${item.qty}</p>
+                        </div>
+                        <div class="flex items-center gap-1 border rounded">
+                            <button onclick="changeQty(${item.id}, -1)" class="px-2 text-xs font-bold">-</button>
+                            <span class="text-xs px-1">${item.qty}</span>
+                            <button onclick="changeQty(${item.id}, 1)" class="px-2 text-xs font-bold">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('cartSubtotal').innerText = `Rs. ${subtotal}`;
+            document.getElementById('cartSavings').innerText = `Rs. ${savings}`;
+            document.getElementById('cartTotal').innerText = `Rs. ${subtotal}`;
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+            }
+            updateCartCount();
+            renderCartItems();
+        }
+
+        function toggleCart(forceOpen = false) {
+            const drawer = document.getElementById('cartDrawer');
+            if (forceOpen || drawer.classList.contains('hidden')) {
+                renderCartItems();
+                drawer.classList.remove('hidden');
+            } else {
+                drawer.classList.add('hidden');
+            }
+        }
+
+        function goToCheckout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            toggleCart(false);
+            showPage('checkout');
+        }
+
+        function getCheckoutPageHTML() {
+            const totalAmount = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            return `
+                <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl border shadow-sm">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 pb-2 border-b">Complete Order Checkout</h2>
+                    <form onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="custName" required class="w-full border rounded-lg p-
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Delivery Address (Bernala, Azad Kashmir)</label>
+                            <textarea id="custAddress" required rows="2" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-emerald-500"></textarea>
+                        </div>
+                        
+                        <!-- Payment Method -->
+                        <div class="border p-4 rounded-lg bg-gray-50 space-y-3">
+                            <h3 class="font-bold text-sm text-gray-800">Select Payment Method</h3>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="radio" name="payMethod" value="JazzCash" checked onclick="togglePaymentDetails('online')"> JazzCash Transfer
+                                </label>
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="radio" name="payMethod" value="EasyPaisa" onclick="togglePaymentDetails('online')"> EasyPaisa Transfer
+                                </label>
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="radio" name="payMethod" value="COD" onclick="togglePaymentDetails('cod')"> Cash on Delivery (Bernala Local)
+                                </label>
+                            </div>
+
+                            <div id="onlinePaymentBox" class="border-t pt-3 mt-3">
+                                <p class="text-xs text-gray-600 font-semibold mb-1">Send total amount to our official accounts:</p>
+                                <p class="text-xs font-mono bg-white p-2 rounded border">
+                                    JazzCash: <strong>PK04JCMA0808923285690902</strong><br>
+                                    EasyPaisa: <strong>PK02TMFB0000000017238850</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm">Submit Order</button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function togglePaymentDetails(type) {
+            const box = document.getElementById('onlinePaymentBox');
+            if (type === 'cod') {
+                box.classList.add('hidden');
+            } else {
+                box.classList.remove('hidden');
+            }
+        }
+
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            const orderId = 'ADM-' + Math.floor(100000 + Math.random() * 900000);
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const address = document.getElementById('custAddress').value;
+            const method = document.querySelector('input[name="payMethod"]:checked').value;
+            const total = cart.reduce((a, i) => a + (i.price * i.qty), 0);
+
+            const newOrder = {
+                id: orderId,
+                customer: name,
+                phone: phone,
+                address: address,
+                items: [...cart],
+                total: total,
+                paymentMethod: method,
+                paymentStatus: method === 'COD' ? 'Order Received - COD' : 'Payment Pending Verification',
+                orderStatus: 'Order Received',
+                date: new Date().toLocaleDateString()
+            };
+
+            orders.unshift(newOrder);
+            localStorage.setItem('adm_orders', JSON.stringify(orders));
+            cart = [];
+            updateCartCount();
+
+            const waText = encodeURIComponent(`AoA Ansari Discount Mart!\nNew Order Submitted:\nOrder ID: ${orderId}\nName: ${name}\nTotal: Rs. ${total}\nPayment Method: ${method}\nPlease confirm my order.`);
+            
+            document.getElementById('app-content').innerHTML = `
+                <div class="max-w-md mx-auto bg-white p-6 rounded-xl border text-center shadow-sm space-y-4">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                        <i data-lucide="check-circle" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">Order Received Successfully!</h3>
+                    <p class="text-xs text-gray-500">Your Order ID is: <strong class="text-emerald-700 font-mono text-sm">${orderId}</strong></p>
+                    <a href="https://wa.me/923558279470?text=${waText}" target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-lg text-xs flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle"></i> Send Order Details on WhatsApp
+                    </a>
+                    <button onclick="showPage('home')" class="text-xs text-gray-500 underline">Return to Shop</button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function getTrackPageHTML() {
+            return `
+                <div class="max-w-md mx-auto bg-white p-6 rounded-xl border shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-3">Track Your Order Status</h3>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="trackInput" placeholder="Enter Order ID (e.g. ADM-123456)" class="flex-1 border rounded-lg p-2 text-sm">
+                        <button onclick="searchOrder()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold">Track</button>
+                    </div>
+                    <div id="trackResult"></div>
+                </div>
+            `;
+        }
+
+        function searchOrder() {
+            const query = document.getElementById('trackInput').value.trim();
+            const found = orders.find(o => o.id.toLowerCase() === query.toLowerCase());
+            const res = document.getElementById('trackResult');
+            if (found) {
+                res.innerHTML = `
+                    <div class="border-t pt-3 space-y-2 text-xs">
+                        <p><strong>Order ID:</strong> ${found.id}</p>
+                        <p><strong>Customer:</strong> ${found.customer}</p>
+                        <p><strong>Payment Status:</strong> <span class="text-emerald-700 font-bold">${found.paymentStatus}</span></p>
+                        <p><strong>Order Status:</strong> <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">${found.orderStatus}</span></p>
+                        <p><strong>Total Amount:</strong> Rs. ${found.total}</p>
+                    </div>
+                `;
+            } else {
+                res.innerHTML = `<p class="text-xs text-red-500 text-center border-t pt-3">No order found with ID "${query}".</p>`;
+            }
+        }
+
+        function showAdminModal() {
+            const pin = prompt("Enter Admin PIN (Default: 1234):");
+            if (pin === '1234') {
+                showPage('admin');
+            } else if(pin !== null) {
+                alert("Incorrect PIN!");
+            }
+        }
+
+        function getAdminPanelHTML() {
+            return `
+                <div class="bg-white p-6 rounded-xl border shadow-sm space-y-6">
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Admin Control Panel</h2>
+                        <button onclick="showPage('home')" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold">Logout Admin</button>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-3">Customer Orders (${orders.length})</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs border">
+                                <thead class="bg-gray-100 text-gray-700 border-b">
+                                    <tr>
+                                        <th class="p-2 border">Order ID</th>
+                                        <th class="p-2 border">Customer</th>
+                                        <th class="p-2 border">Total</th>
+                                        <th class="p-2 border">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${orders.length === 0 ? '<tr><td colspan="4" class="p-4 text-center text-gray-400">No orders placed yet.</td></tr>' : 
+                                    orders.map(o => `
+                                        <tr class="border-b">
+                                            <td class="p-2 font-bold">${o.id}</td>
+                                            <td class="p-2">${o.customer}<br><span class="text-[10px] text-gray-400">${o.phone}</span></td>
+                                            <td class="p-2 font-bold">Rs. ${o.total}</td>
+                                            <td class="p-2">
+                                                <button onclick="verifyOrder('${o.id}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-[10px]">Verify Payment</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function verifyOrder(id) {
+            const order = orders.find(o => o.id === id);
+            if (order) {
+                order.paymentStatus = 'Payment Verified';
+                order.orderStatus = 'In Production / Packing';
+                localStorage.setItem('adm_orders', JSON.stringify(orders));
+                showPage('admin');
+            }
+        }
+
+        function scrollToProducts() {
+            document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            renderFilteredProducts(query);
+        }
+
+        function filterProductsMobile() {
+            const query = document.getElementById('mobileSearchInput').value.toLowerCase();
+            renderFilteredProducts(query);
+        }
+
+        function renderFilteredProducts(query) {
+            const grid = document.getElementById('productGrid');
+            if (!grid) return;
+            const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
+            grid.innerHTML = filtered.map(p => `
+                <div class="bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div class="relative">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-36 md:h-44 object-cover">
+                        <span class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            SAVE Rs. ${p.originalPrice - p.price}
+                        </span>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-400 uppercase font-bold">${p.category}</span>
+                            <h4 class="font-bold text-sm text-gray-800 leading-snug line-clamp-2">${p.name}</h4>
+                        </div>
+                        <div class="mt-3">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base font-extrabold text-emerald-700">Rs. ${p.price}</span>
+                                <span class="text-xs text-gray-400 line-through">Rs. ${p.originalPrice}</span>
+                            </div>
+                            <button onclick="addToCart(${p.id})" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
